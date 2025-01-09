@@ -11,6 +11,7 @@ const WelcomeScreen = () => {
             <Link href="/page1">Onboarding Page 1</Link>
             <Link href="/page2">Onboarding Page 2</Link>
             <Link href="/page3">Onboarding Page 3</Link>
+
         </View>
     );
 };
