@@ -4,7 +4,7 @@ import { Link } from 'expo-router';
 
 const WelcomeScreen = () => {
     return (
-        <View style={styles.container}>
+        <View className='bg-red-700'>
             <Text style={styles.title}>Welcome to AdaptiveFit!</Text>
             <Text style={styles.subtitle}>Your personalized fitness journey starts here.</Text>
             <Link href="/login">Login</Link>
