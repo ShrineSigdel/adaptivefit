@@ -26,13 +26,13 @@ const LoginScreen = () => {
                 <Image
                     source={heroImage}
                     className="absolute inset-0 w-full h-full"
-                    style={{ resizeMode: 'cover', zIndex: -1 }}
+                    style={{ resizeMode: 'cover', zIndex: 1 }}
                 />
                 {/* Content */}
-                <View className="flex-1 justify-center p-4 mt-80 ">
+                <View className="flex-1 justify-center p-4 mt-80 z-[2]">
                     {/* Text Content */}
                         <View className='flex-row items-center justify-around'>
-                            <Text className="text-white text-3xl font-bold mb-2 ">"Move <br />Beyond <br />Barriers"</Text>
+                            <Text className="text-white text-3xl font-bold mb-2 ">"Move{'\n'} Beyond{'\n'} Barriers"</Text>
                             <View className="w-24 h-24">
                             <Image
                                 source={icon}
