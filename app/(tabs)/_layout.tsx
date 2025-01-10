@@ -1,20 +1,31 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
-import MyWorkout from './myworkout';
-import ExercisesScreen from './exercises';
+import * as React from 'react';
+import { BottomNavigation } from 'react-native-paper';
+import ExercisesRoute from './exercises';
+import MyWorkoutRoute from './myworkout';
 
-const Tab = createBottomTabNavigator();
 
-const Layout = () => {
+const MyComponent = () => {
+    const [index, setIndex] = React.useState(0);
+    const [routes] = React.useState([
+        { key: 'exercises', title: 'Exercises', focusedIcon: 'arm-flex', unfocusedIcon: 'arm-flex-outline' },
+        { key: 'myworkout', title: 'My Workout', focusedIcon: 'star-box', unfocusedIcon: 'star-box-outline' },
+    ]);
+
+    const renderScene = BottomNavigation.SceneMap({
+        exercises: ExercisesRoute,
+        myworkout: MyWorkoutRoute,
+    });
+
     return (
-        <NavigationContainer>
-            <Tab.Navigator>
-                <Tab.Screen name="MyWorkout" component={MyWorkout} />
-                <Tab.Screen name="Exercises" component={ExercisesScreen} />
-            </Tab.Navigator>
-        </NavigationContainer>
+        <BottomNavigation
+            navigationState={{ index, routes }}
+            onIndexChange={setIndex}
+            renderScene={renderScene}
+            activeColor='#198BEF'
+            inactiveColor='#69747a'
+                
+        />
     );
 };
 
-export default Layout;
+export default MyComponent;
