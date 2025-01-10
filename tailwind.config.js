@@ -1,9 +1,14 @@
 module.exports = {
-  // NOTE: Update this to include the paths to all of your component files.
+  // Include paths to all component files
   content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        poppins: ["Poppins", "sans-serif"], 
+        inriaSans: ['Inria Sans', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
-}
+};
