@@ -1,25 +1,18 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import * as React from 'react';
+import { ScrollView } from 'react-native';
+import ExerciseCard from '@/components/ExerciseCard';
 
-const ExercisesScreen = () => {
+const Exercises = () => {
+
+    const dummyImage = require('@/assets/images/dummy.png');
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>Exercises Screen</Text>
-        </View>
-    );
-};
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-    },
-    text: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-});
 
-export default ExercisesScreen;
+        <ScrollView className='flex-1 align-center px-2 py-4'>
+            <ExerciseCard title="Barbell Back Squat" image={dummyImage} tags={["Legs", "Liftingbar"]}></ExerciseCard>
+            <ExerciseCard title="Barbell Back Squat" image={dummyImage} tags={["Legs", "Liftingbar"]}></ExerciseCard>
+        </ScrollView>
+    )
+}
+
+export default Exercises;
