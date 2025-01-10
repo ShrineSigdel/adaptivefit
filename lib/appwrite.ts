@@ -25,6 +25,7 @@ export async function login(){
     try {
         const redirectUri = linking.createURL('/page1'); //redirect to onboarding page after login
 
+        //create a login url
         const response = await account.createOAuth2Token(OAuthProvider.Google, redirectUri);
         if (!response) 
             throw new Error("Create OAuth2 token failed");
