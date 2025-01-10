@@ -44,8 +44,7 @@
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "expo-image": "~2.0.3",
-    "expo-dev-client": "~5.0.8"
-    "react-native-webview": "13.12.5",
+    "expo-dev-client": "~5.0.8",
     "tailwind-rn": "^4.2.0",
     "typeface-inria-sans": "^1.1.13"
   },
