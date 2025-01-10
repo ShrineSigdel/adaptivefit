@@ -1,5 +1,8 @@
 import React from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import ExerciseCard from '@/components/MyWorkoutCard';
+
+import dummyImage from '@/assets/images/dummy.png'; 
 
 const MyWorkout = () => {
     const streakIcon = require('../../assets/images/streak.png');
@@ -7,15 +10,15 @@ const MyWorkout = () => {
     // Get today's day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
     const todayIndex = new Date().getDay();
 
-    // Sample workouts data
+    // Sample workouts data with the same image path included for each workout
     const workouts = [
-        { id: 1, name: 'Push-ups', sets: 3, reps: 15 },
-        { id: 2, name: 'Squats', sets: 4, reps: 20 },
-        { id: 3, name: 'Deadlifts', sets: 3, reps: 10 },
-        { id: 4, name: 'Pull-ups', sets: 3, reps: 12 },
-        { id: 5, name: 'Bench Press', sets: 4, reps: 10 },
-        { id: 6, name: 'Leg Press', sets: 3, reps: 15 },
-        { id: 7, name: 'Shoulder Press', sets: 3, reps: 12 },
+        { id: 1, name: 'Push-ups', sets: 3, reps: 15, image: dummyImage },
+        { id: 2, name: 'Squats', sets: 4, reps: 20, image: dummyImage },
+        { id: 3, name: 'Deadlifts', sets: 3, reps: 10, image: dummyImage },
+        { id: 4, name: 'Pull-ups', sets: 3, reps: 12, image: dummyImage },
+        { id: 5, name: 'Bench Press', sets: 4, reps: 10, image: dummyImage },
+        { id: 6, name: 'Leg Press', sets: 3, reps: 15, image: dummyImage },
+        { id: 7, name: 'Shoulder Press', sets: 3, reps: 12, image: dummyImage },
     ];
 
     // Function for handling workout completion
@@ -28,7 +31,7 @@ const MyWorkout = () => {
         <SafeAreaView style={{ flex: 1 }}>
             <View className="flex-1 bg-white">
                 {/* Upper Section */}
-                <View className="flex flex-col h-[25%] bg-[#F3EEF5] p-5">
+                <View className="flex flex-col h-[25%] p-5">
                     <View className="flex-row justify-between items-center pt-10">
                         <Text className="text-[30px] font-poppins font-bold">MY WORKOUTS</Text>
                         <View className="flex-row items-center">
@@ -61,21 +64,13 @@ const MyWorkout = () => {
                 {/* Below Section - List of Workouts */}
                 <ScrollView contentContainerStyle={{ paddingBottom: 80 }} className="px-5">
                     {workouts.map((workout) => (
-                        <View
-                            key={workout.id}
-                            className="flex flex-row justify-between items-center border-b border-gray-300 py-4"
-                        >
-                            <Text className="font-poppins text-[18px] font-bold">{workout.id}</Text>
-                            <View className="flex-1 ml-3">
-                                <Text className="font-poppins text-[18px]">{workout.name}</Text>
-                                <Text className="font-poppins text-[12px] text-gray-500">
-                                    {workout.sets} sets x {workout.reps} reps
-                                </Text>
-                            </View>
-                            <TouchableOpacity>
-                                <Text className="font-poppins text-[#198BEF]">➔</Text>
-                            </TouchableOpacity>
-                        </View>
+                        <ExerciseCard 
+                            key={workout.id} 
+                            title={workout.name} 
+                            image={workout.image} // Reusing the imported image path
+                            sets={workout.sets} 
+                            reps={workout.reps} 
+                        />
                     ))}
 
                     {/* "Workout Done" Button Inside ScrollView */}

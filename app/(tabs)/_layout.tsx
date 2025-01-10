@@ -3,7 +3,6 @@ import { BottomNavigation } from 'react-native-paper';
 import ExercisesRoute from './exercises';
 import MyWorkoutRoute from './myworkout';
 
-
 const MyComponent = () => {
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
@@ -21,9 +20,9 @@ const MyComponent = () => {
             navigationState={{ index, routes }}
             onIndexChange={setIndex}
             renderScene={renderScene}
-            activeColor='#198BEF'
-            inactiveColor='#69747a'
-                
+            activeColor="#198BEF"
+            inactiveColor="#69747a"
+            shifting={true} 
         />
     );
 };

@@ -1,42 +1,46 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { Card } from 'react-native-paper';
-import { Bookmark } from 'lucide-react-native'; // Assuming you are using lucide-react-native
 
 interface ExerciseCardProps {
-  title: string;
-  image: string;
-  tags: string[];
+  name: string;
+  image: any; // Local image or URL
+  onAddToWorkout: () => void; // Callback function for adding to workout
 }
 
-export default function ExerciseCard({ 
-  title = "Barbell Back Squat",
-  image = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%20from%202025-01-10%2020-53-47-7PrAsSEpHI9Ez8074LjHyUhbvmhvy9.png",
-  tags = ["Legs", "Liftingbar"]
-}: ExerciseCardProps) {
+const ExerciseCard: React.FC<ExerciseCardProps> = ({ name, image, onAddToWorkout }) => {
   return (
-    <Card className="w-full max-w-md overflow-hidden mb-4">
-      <View className="p-4 flex-row items-start relative">
-        {/* Image */}
-        <Image source={{ uri: image }} className="w-24 h-24 rounded-lg bg-sky-100 mr-4" />
+    <View
+      className="w-[45%] bg-white rounded-lg overflow-hidden mb-4 mx-2"
+      style={{
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 6, // Android shadow
+      }}
+    >
+      {/* Thumbnail */}
+      <Image source={image} className="w-full h-32" resizeMode="cover" style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8 }} />
 
-        {/* Content */}
-        <View className="flex-1">
-          <Text className="text-xl font-semibold mb-2">{title}</Text>
-          <View className="flex-row flex-wrap">
-            {tags.map((tag, index) => (
-              <Text key={index} className="text-sm text-gray-500">
-                {index > 0 && ' • '}{tag}
-              </Text>
-            ))}
-          </View>
-        </View>
-
-        {/* Bookmark Button */}
-        <TouchableOpacity className="absolute top-4 right-4" accessibilityLabel="Bookmark exercise">
-          <Bookmark width={24} height={24} color="gray" />
+      {/* Content */}
+      <View className="p-3">
+        <Text className="text-lg font-semibold text-black-300">{name}</Text>
+        <TouchableOpacity
+          onPress={onAddToWorkout}
+          className="bg-blue-500 mt-3 py-2 rounded-lg items-center"
+          style={{
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2,
+            shadowRadius: 2,
+            elevation: 4, // Slight shadow on button for depth
+          }}
+        >
+          <Text className="text-white text-sm font-bold">Add to My Workout</Text>
         </TouchableOpacity>
       </View>
-    </Card>
+    </View>
   );
-}
+};
+
+export default ExerciseCard;

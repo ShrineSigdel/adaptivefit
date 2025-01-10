@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/poppins": "^0.2.3",
-    "@expo/vector-icons": "^14.0.2",
+    "@expo/vector-icons": "^14.0.4",
     "@fontsource/poppins": "^5.1.1",
     "@react-native-community/blur": "^4.4.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
@@ -54,7 +54,8 @@
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "tailwind-rn": "^4.2.0",
-    "typeface-inria-sans": "^1.1.13"
+    "typeface-inria-sans": "^1.1.13",
+    "use-debounce": "^10.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
