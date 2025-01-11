@@ -41,10 +41,16 @@ const Page3: React.FC = () => {
                         <TouchableOpacity
                             key={index}
                             onPress={() => handleOptionPress(option)}
+<<<<<<< HEAD
                             className={`flex flex-col items-center justify-center p-5 h-20 mx-10 mb-5 border-2 rounded-[20px] ${isSelected ? 'border-[#198BEF]' : 'border-[#D9D9D9]'
                                 }`}
+=======
+                            className={`flex flex-row items-center justify-between p-3 h-16 mx-10 mb-3 border-2 rounded-[20px] ${
+                                isSelected ? 'border-[#198BEF] bg-[#E6F4FF]' : 'border-[#D9D9D9] bg-[#F9FAFB]'
+                            }`}
+>>>>>>> 0d0131e (ui update)
                         >
-                            <Text className="text-[16px] font-semibold text-[#000000]">
+                            <Text className="text-lg font-semibold text-[#000000]">
                                 {option}
                             </Text>
                         </TouchableOpacity>
