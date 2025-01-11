@@ -9,7 +9,7 @@ interface User {
 }
 
 interface GlobalContextType {
-  isLogged: boolean; 
+  isLogged: boolean;
   user: User | null;
   loading: boolean;
   refetchUser: () => Promise<void>;
@@ -31,7 +31,7 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
     try {
       setLoading(true);
       const currentUser = await getCurrentUser();
-      if(currentUser){
+      if (currentUser) {
         console.log("Current User:", currentUser);
         setUser(currentUser);
       }
@@ -43,11 +43,11 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
   };
   //any changes
   useEffect(() => {
-    if(user){
-        console.log("User:", user);
-        console.log("isLogged:", isLogged);
+    if (user) {
+      console.log("User:", user);
+      console.log("isLogged:", isLogged);
     }
-},[user]);
+  }, [user]);
 
   //a wrapper around initialize user (used after login logouts to refetch user)
   const refetchUser = async () => {

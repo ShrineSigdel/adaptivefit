@@ -4,8 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchBar from '@/components/SearchBar';
 import ExerciseCard from '@/components/ExerciseCard';
 import dummyImage from '@/assets/images/dummy.png';
+import { getExercises } from '@/lib/appwrite';
 
 const Exercises = () => {
+
+  const appExercies = getExercises();
+  console.log(appExercies);
   // Dummy data for exercises
   const exercises = [
     { id: 1, name: 'Push-ups', image: dummyImage },
