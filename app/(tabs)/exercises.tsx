@@ -10,6 +10,7 @@ import { useGlobalContext } from '@/lib/globalProvider';
 const Exercises = () => {
   const [exercises, setExercises] = useState<any[]>([]);
   const {preferences} = useGlobalContext(); //get the user preferences
+  const {user} = useGlobalContext(); //get the user from global context
   const router = useRouter();
 
   useEffect(() => {
@@ -37,7 +38,7 @@ const Exercises = () => {
               Welcome Back
             </Text>
             <Text className="text-3xl font-bold text-gray-900 font-robotoMono">
-              Nishan
+              {user?.name ?? 'Guest'}
             </Text>
           </View>
         </View>
