@@ -1,9 +1,17 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Alert } from 'react-native';
 import { Button, Avatar } from 'react-native-paper';
 import { MD3LightTheme as DefaultTheme, PaperProvider } from 'react-native-paper';
+import {login} from '@/lib/appwrite';
+import { useGlobalContext } from '@/lib/globalProvider';
+import { Redirect } from 'expo-router';
+import { getCurrentUser } from '@/lib/appwrite';
 
 const LoginScreen = () => {
+    const {refetchUser, loading, isLogged}  = useGlobalContext();
+
+    if(!loading && isLogged) return <Redirect href = "/" />; //dont know about this
+
     const heroImage = require('../assets/images/hero2.jpeg');
     const icon = require('../assets/images/favicon.png');
         const theme = {
@@ -19,6 +27,18 @@ const LoginScreen = () => {
             },
         };
 
+        const handleLogin = async () => {
+            try{
+                const result = await login();
+                if (result) {
+                    await refetchUser();
+                    Alert.alert("Successfully logged in");
+                }
+            }catch(error){
+                console.error(error);
+                Alert.alert("Error", "Failed to login");
+            }
+        };
 
     return (
         <PaperProvider>
@@ -48,7 +68,7 @@ const LoginScreen = () => {
                         <Button
                             icon="google"
                             mode="contained"
-                            onPress={() => console.log('Pressed')}
+                            onPress={handleLogin}
                             style={{ margin: 20, backgroundColor: '#198BEF' }}
                         >
                             Sign in with Google
