@@ -1,81 +1,99 @@
 import React from 'react';
-import { View, Text, Image, Alert } from 'react-native';
-import { Button, Avatar } from 'react-native-paper';
-import { MD3LightTheme as DefaultTheme, PaperProvider } from 'react-native-paper';
-import {login} from '@/lib/appwrite';
+import { View, Text, Image, Alert, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { login } from '@/lib/appwrite';
 import { useGlobalContext } from '@/lib/globalProvider';
 import { Redirect } from 'expo-router';
-import { getCurrentUser } from '@/lib/appwrite';
 
 const LoginScreen = () => {
-    const {refetchUser, loading, isLogged}  = useGlobalContext();
+    const { refetchUser, loading, isLogged } = useGlobalContext();
+    const background = require('../assets/images/hero2.jpeg');
+    const googleIcon = require('../assets/images/google.png'); // Google Icon
 
-    if(!loading && isLogged) return <Redirect href = "/(tabs)/exercises" />; //dont know about this
+    if (!loading && isLogged) return <Redirect href="/(tabs)/exercises" />;
 
-    const heroImage = require('../assets/images/hero2.jpeg');
-    const icon = require('../assets/images/favicon.png');
-        const theme = {
-            ...DefaultTheme,
-            // Specify custom property in nested object
-    
-            colors: {
-                ...DefaultTheme.colors,
-                primary: '#198BEF',
-                secondary: '#070D81',
-                text: '#000000',
-                background: '#FFFFFF',
-            },
-        };
-
-        const handleLogin = async () => {
-            try{
-                const result = await login();
-                if (result) {
-                    await refetchUser();
-                    Alert.alert("Successfully logged in");
-                }
-            }catch(error){
-                console.error(error);
-                Alert.alert("Error", "Failed to login");
+    const handleLogin = async () => {
+        try {
+            const result = await login();
+            if (result) {
+                await refetchUser();
             }
-        };
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'Failed to login');
+        }
+    };
 
     return (
-        <PaperProvider>
-            <View className="flex-1 relative bg-[#3D3B40]">
-                <Image
-                    source={heroImage}
-                    className="absolute inset-0 w-full h-full"
-                    style={{ resizeMode: 'cover', zIndex: 1 }}
-                />
-                {/* Content */}
-                <View className="flex-1 justify-center p-4 mt-80 z-[2]">
-                    {/* Text Content */}
-                        <View className='flex-row items-center justify-around'>
-                            <Text className="text-white text-3xl font-bold mb-2 ">"Move{'\n'} Beyond{'\n'} Barriers"</Text>
-                            <View className="w-24 h-24">
-                            <Image
-                                source={icon}
-                                className="w-full h-full"
-                                style={{ resizeMode: 'contain', zIndex: 1 }}
-                            />
-                        </View>
-                        </View>
-                        <Text className="text-white text-center text-lg font-medium my-8 italic">
-                        Discover tailored workouts, personalized guidance, and a community that celebrates every step of your fitness journey
-                        </Text>
-                 
-                        <Button
-                            icon="google"
-                            mode="contained"
-                            onPress={handleLogin}
-                            style={{ margin: 20, backgroundColor: '#198BEF' }}
-                        >
-                            Sign in with Google
-                        </Button>
+        <SafeAreaView className="flex-1">
+            {/* Background Image */}
+            <Image
+                source={background}
+                className="absolute w-full h-full"
+                style={{ opacity: 0.3 }} // Dim background for better readability
+            />
+            {/* Main Content */}
+            <View className="flex-1 items-center justify-center px-8">
+                {/* Header */}
+                <View className="mb-10">
+                    <Text className="text-center text-4xl font-black mt-2">
+                        A D A P T I V E   F I T
+                    </Text>
+
+                    {/* Slogan */}
+                    <Text className="text-center text-xl font-semibold">
+                        Move beyond barriers
+                    </Text>
                 </View>
+
+                {/* Additional Text */}
+                <Text className="text-center text-lg font-normal mt-4">
+                    Discover tailored workouts, personalized guidance, and a community that celebrates every step of your fitness journey.
+                </Text>
+
+                {/* Login Button using TouchableOpacity */}
+                <TouchableOpacity
+                    onPress={handleLogin}
+                    style={{
+                        width: '80%',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: '#070D81', // Updated background color to match the theme
+                        borderRadius: 30,
+                        paddingVertical: 12,
+                        marginTop: 20, // Add some spacing from the text
+                        elevation: 4, // Adding shadow for better visibility on different backgrounds
+                    }}
+                >
+                    <Image
+                        source={googleIcon}
+                        style={{
+                            width: 20,
+                            height: 20,
+                            marginRight: 10, // Adjust the space between icon and text
+                        }}
+                    />
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            fontWeight: 'bold',
+                            color: '#FFFFFF',
+                        }}
+                    >
+                        Login with Google
+                    </Text>
+                </TouchableOpacity>
             </View>
-        </PaperProvider>
+
+            {/* Footer */}
+            <View className="absolute bottom-6 w-full items-center">
+                <Text className="text-center text-sm text-gray-500">
+                    By continuing, you agree to our{' '}
+                    <Text className="text-[#198BEF] font-semibold">Terms & Conditions</Text>
+                </Text>
+            </View>
+        </SafeAreaView>
     );
 };
 
