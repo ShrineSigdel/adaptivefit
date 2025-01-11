@@ -7,6 +7,7 @@ module.exports = {
       fontFamily: {
         poppins: ['Poppins_400Regular', 'sans-serif'],
         inriaSans: ['Inria Sans', 'sans-serif'],
+        robotoMono: ['Roboto Mono', 'monospace'], 
       },
     },
   },

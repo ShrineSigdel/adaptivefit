@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { PaperProvider, MD3LightTheme as DefaultTheme } from 'react-native-paper';
-import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import OnBoardingHeader from '@/components/onBoardingHeader';
 
@@ -58,50 +57,38 @@ const Page1: React.FC = () => {
                         Tell us which best describes your impairment(s)
                     </Text>
                 </View>
-                <Image source={heroImage} contentFit="cover" className="h-[220px] w-auto" />
                 <View>
                     {options.map((option, index) => (
-                        <View key={index} className="mx-5 my-2">
+                        <View key={index} className="mx-5 my-2">  {/* Reduced margin further */}
                             {/* Main Option */}
                             <TouchableOpacity
                                 onPress={() => handleOptionPress(option.title)}
-                                className={`flex flex-row items-center justify-between p-4 border-2 rounded-[20px] ${
-                                    expandedOption === option.title ? 'border-[#198BEF]' : 'border-[#D9D9D9]'
+                                className={`flex flex-row items-center justify-between p-3 h-16 border-2 rounded-[20px] ${
+                                    expandedOption === option.title ? 'border-[#198BEF] bg-[#E6F4FF]'
+                                                                    : 'border-[#D9D9D9] bg-[#F9FAFB]'
                                 }`}
                             >
-                                <Text
-                                    className={`text-lg font-bold ${
-                                        expandedOption === option.title ? 'text-[#198BEF]' : 'text-black'
-                                    }`}
-                                >
+                                <Text className="text-lg font-semibold text-black">
                                     {option.title}
                                 </Text>
-                                <Text
-                                    className={`text-lg font-semibold ${
-                                        expandedOption === option.title ? 'text-[#198BEF]' : 'text-black'
-                                    }`}
-                                >
+                                <Text className="text-lg font-semibold text-black">
                                     {expandedOption === option.title ? '-' : '+'}
                                 </Text>
                             </TouchableOpacity>
                             {/* Sub-Options */}
                             {expandedOption === option.title && (
-                                <View className="mt-2">
+                                <View className="mt-2"> {/* Reduced top margin */}
                                     {option.subOptions.map((subOption, subIndex) => (
                                         <TouchableOpacity
                                             key={subIndex}
                                             onPress={() => handleSubOptionPress(subOption)}
-                                            className={`flex flex-row items-center justify-center p-3 mx-2 border-2 rounded-[20px] ${
+                                            className={`flex flex-row items-center justify-center p-3 mx-5 mb-3 border-2 rounded-[20px] ${
                                                 selectedOption === subOption
                                                     ? 'border-[#198BEF] bg-[#E6F4FF]'
                                                     : 'border-[#D9D9D9] bg-[#F9FAFB]'
                                             }`}
                                         >
-                                            <Text
-                                                className={`text-lg ${
-                                                    selectedOption === subOption ? 'text-[#198BEF]' : 'text-black'
-                                                }`}
-                                            >
+                                            <Text className="text-lg text-black">
                                                 {subOption}
                                             </Text>
                                         </TouchableOpacity>
