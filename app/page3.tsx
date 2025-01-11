@@ -3,9 +3,13 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import OnBoardingHeader from '../components/onBoardingHeader';
+import { useGlobalContext } from '@/lib/globalProvider';
+import { saveUserPreferences } from '@/lib/appwrite';
 
 const Page3: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const {preferences, setUserPreferences} = useGlobalContext(); //get the preferences from global context
+
     const router = useRouter(); 
     const options = [
         "Yes",
@@ -15,11 +19,13 @@ const Page3: React.FC = () => {
 
     const handleOptionPress = (option: string) => {
         setSelectedOption(option);
+        setUserPreferences('assistanceNeeded', option); //set the first preference
     };
 
     const handleContinue = () => {
         if (selectedOption) {
-            router.push('/nextPage'); 
+            saveUserPreferences(preferences); //save the preferences
+            router.push('/(tabs)/exercises'); //redirect to exercises page
         } else {
             alert('Please select an option before continuing.');
         }

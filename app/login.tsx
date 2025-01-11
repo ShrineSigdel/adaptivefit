@@ -10,7 +10,7 @@ import { getCurrentUser } from '@/lib/appwrite';
 const LoginScreen = () => {
     const {refetchUser, loading, isLogged}  = useGlobalContext();
 
-    if(!loading && isLogged) return <Redirect href = "/" />; //dont know about this
+    if(!loading && isLogged) return <Redirect href = "/(tabs)/exercises" />; //dont know about this
 
     const heroImage = require('../assets/images/hero2.jpeg');
     const icon = require('../assets/images/favicon.png');

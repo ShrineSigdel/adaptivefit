@@ -2,6 +2,7 @@ import { Client, Account, OAuthProvider, Avatars } from 'react-native-appwrite';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import { makeRedirectUri } from 'expo-auth-session';
+import { openAuthSessionAsync } from 'expo-web-browser';
 
 //client configs
 export const config = {
@@ -39,7 +40,7 @@ export async function login(){
             throw new Error("Create OAuth2 token failed1");
 
         // Open loginUrl and listen for the redirect(will return a url with secret and userId)
-        const browserResult = await WebBrowser.openAuthSessionAsync(loginUri.toString(), redirectUri);
+        const browserResult = await openAuthSessionAsync(loginUri.toString(), redirectUri);
         console.log("Browser Result:", browserResult);
 
         if (browserResult.type !== "success")
@@ -85,4 +86,15 @@ export async function getCurrentUser() {
       return null;
     }
   }
+
+  //user preferences 
+  export const saveUserPreferences = async (preferences:any) =>{
+    try {
+      const result = await account.updatePrefs(preferences);
+      console.log("Preferences Updated:", result);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
 
