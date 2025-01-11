@@ -3,10 +3,12 @@ import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { PaperProvider, MD3LightTheme as DefaultTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import OnBoardingHeader from '@/components/onBoardingHeader';
+import { useGlobalContext } from '@/lib/globalProvider';
 
 const Page1: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null); // Track selected option
     const [expandedOption, setExpandedOption] = useState<string | null>(null); // Track expanded option for dropdown
+    const {preferences, setUserPreferences} = useGlobalContext(); //get the preferences from global context
     const heroImage = require('../assets/images/hero1.png');
     const router = useRouter();
 
@@ -30,10 +32,12 @@ const Page1: React.FC = () => {
 
     const handleOptionPress = (option: string) => {
         setExpandedOption(expandedOption === option ? null : option); // Toggle expanded state
+        setUserPreferences('impairementType', option); //set the first preference 
     };
 
     const handleSubOptionPress = (subOption: string) => {
         setSelectedOption(subOption); // Set selected sub-option
+        setUserPreferences('impairementLevel', subOption); //set the second preference
     };
 
     const handleContinue = () => {

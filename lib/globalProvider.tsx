@@ -8,11 +8,21 @@ interface User {
   avatar: string;
 }
 
+interface Preferences {
+  impairementType: string;
+  impairementLevel: string;
+  exerciseRoutine: string;
+  assistanceNeeded: string;
+}
+
 interface GlobalContextType {
   isLogged: boolean;
   user: User | null;
   loading: boolean;
+  preferences: Preferences | null;
   refetchUser: () => Promise<void>;
+  setUserPreferences: (key: keyof Preferences, value: string) => void;
+  
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -25,6 +35,12 @@ interface GlobalProviderProps {
 export const GlobalProvider = ({ children }: GlobalProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [preferences, setPreferences] = useState<Preferences>({
+    impairementType: '',
+    impairementLevel: '',
+    exerciseRoutine: '',
+    assistanceNeeded: ''
+  });
 
   //to get the user during login or mounting the global provider
   const initializeUser = async () => {
@@ -41,7 +57,23 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
       setLoading(false);
     }
   };
-  //any changes
+
+  //function to set the user preferences
+  const setUserPreferences = (key: keyof Preferences, value: string) => {
+    if (!user) return;
+    const newPreferences = {
+      ...preferences,
+      [key]: value,
+    };
+    setPreferences(newPreferences);
+  }
+
+  //any changes in preferences 
+  useEffect(() => {
+    console.log("Preferences:", preferences);
+  },[preferences]);
+    
+  //any changes in user
   useEffect(() => {
     if (user) {
       console.log("User:", user);
@@ -62,7 +94,9 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
         user,
         isLogged,
         loading,
+        preferences,
         refetchUser,
+        setUserPreferences
       }}
     >
       {children}

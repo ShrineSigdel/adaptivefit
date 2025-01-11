@@ -1,6 +1,7 @@
 import { Client, Account, OAuthProvider, Avatars, Databases } from 'react-native-appwrite';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
+import { openAuthSessionAsync } from 'expo-web-browser';
 
 //client configs
 export const config = {
@@ -38,9 +39,9 @@ export async function login() {
     if (!loginUri)
       throw new Error("Create OAuth2 token failed1");
 
-    // Open loginUrl and listen for the redirect(will return a url with secret and userId)
-    const browserResult = await WebBrowser.openAuthSessionAsync(loginUri.toString(), redirectUri);
-    console.log("Browser Result:", browserResult);
+        // Open loginUrl and listen for the redirect(will return a url with secret and userId)
+        const browserResult = await openAuthSessionAsync(loginUri.toString(), redirectUri);
+        console.log("Browser Result:", browserResult);
 
     if (browserResult.type !== "success")
       throw new Error("Create OAuth2 token failed2");
@@ -85,6 +86,17 @@ export async function getCurrentUser() {
     return null;
   }
 }
+
+  //user preferences 
+  export const saveUserPreferences = async (preferences:any) =>{
+    try {
+      const result = await account.updatePrefs(preferences);
+      console.log("Preferences Updated:", result);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
 
 
 const database = new Databases(client);

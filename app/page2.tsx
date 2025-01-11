@@ -3,9 +3,12 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import OnBoardingHeader from '../components/onBoardingHeader';
+import { useGlobalContext } from '@/lib/globalProvider';
 
 const Page2: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const {preferences, setUserPreferences} = useGlobalContext(); //get the preferences from global context
+    
     const router = useRouter(); 
     const options = [
         "Exercise 5+ times a week",
@@ -16,6 +19,7 @@ const Page2: React.FC = () => {
 
     const handleOptionPress = (option: string) => {
         setSelectedOption(option);
+        setUserPreferences('exerciseRoutine', option); //set the first preference
     };
 
     const handleContinue = () => {
