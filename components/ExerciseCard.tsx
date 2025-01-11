@@ -21,7 +21,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({ name, image, onAddToWorkout
         elevation: 6, // Android shadow
       }}
     >
-      <Image source={image} className="w-full h-32" resizeMode="cover" style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8 }} />
+      <Image source={image} className="w-full h-32" resizeMode="cover" style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8, height:150, width: 150 }} />
       <View className="p-3">
         <Text className="text-lg font-semibold text-black-300">{name}</Text>
         <TouchableOpacity

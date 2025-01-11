@@ -56,12 +56,12 @@ const Exercises = () => {
         <View className="flex-row flex-wrap justify-between">
           {exercises.map((exercise) => (
             <ExerciseCard
-              key={exercise.$id}
-              name={exercise.name || 'Exercise'} // Handle possible empty name
-              image={exercise.thumbnail}
-              onAddToWorkout={() => handleAddToWorkout(exercise.name)}
-              onPress={() => router.push(`/exercise-description/${exercise.$id}`)}
-            />
+            key={exercise.$id}
+            name={exercise.name || 'Exercise'} // Handle possible empty name
+            image={exercise.thumbnail ? { uri: exercise.thumbnail } : dummyImage} // Provide a fallback image
+            onAddToWorkout={() => handleAddToWorkout(exercise.name)}
+            onPress={() => router.push(`/exercise-description/${exercise.$id}`)}
+          />
           ))}
         </View>
       </ScrollView>

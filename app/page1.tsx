@@ -24,7 +24,7 @@ const Page1: React.FC = () => {
     };
 
     const options = [
-        { title: 'Upper-limb Prosthesis', subOptions: ['single', 'souble'] },
+        { title: 'Upper-limb Prosthesis', subOptions: ['single', 'double'] },
         { title: 'Lower-limb Prosthesis', subOptions: ['single', 'double'] },
         { title: 'Upper-limb Amputee', subOptions: ['single', 'double'] },
         { title: 'Lower-limb Amputee', subOptions: ['single', 'double'] },

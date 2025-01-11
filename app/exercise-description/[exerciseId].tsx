@@ -4,29 +4,31 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { Ionicons } from '@expo/vector-icons';
+import { getExerciseDetails } from '@/lib/appwrite';  
 
 const Description = () => {
   const { exerciseId } = useLocalSearchParams();
-  const [exerciseName, setExerciseName] = useState<string | null>(null);
+  const [exercise, setExercise] = useState<any>(null);
   const router = useRouter();
 
-  const exercises = [
-    { id: 1, name: 'Push-ups' },
-    { id: 2, name: 'Squats' },
-    { id: 3, name: 'Deadlifts' },
-    { id: 4, name: 'Pull-ups' },
-  ];
-
+  console.log("exerciseId:", exerciseId);
   useEffect(() => {
-    const exercise = exercises.find(exercise => exercise.id === Number(exerciseId));
-    if (exercise) {
-      setExerciseName(exercise.name);
-    }
+    const fetchExercise = async () => {
+      try{
+        if(!exerciseId) return; //ensure exerciseId is available
+        const exerciseData = await getExerciseDetails(exerciseId as string);
+        setExercise(exerciseData);
+      }catch{
+        console.log("Error fetching exercise details");
+      }
+    };
+
+    fetchExercise();
   }, [exerciseId]);
 
-  const videoSource = require('../../assets/Videos/pushup.mp4');
 
-  const player = useVideoPlayer(videoSource, (player) => {
+
+  const player = useVideoPlayer(exercise?.videoUrl, (player) => {
     player.loop = true;
     player.pause();
   });
@@ -40,7 +42,7 @@ const Description = () => {
           <Ionicons name="arrow-back" size={24} color="#198BEF" />
         </TouchableOpacity>
         <Text className="text-2xl font-bold text-gray-800">
-          {exerciseName || 'Loading...'}
+          {exercise.name || 'Loading...'}
         </Text>
       </View>
 
@@ -59,7 +61,9 @@ const Description = () => {
         <View className="p-5 bg-white rounded-xl shadow-lg mb-5">
           <Text className="text-xl font-bold text-gray-800 mb-3">Target Muscle Group</Text>
           <Text className="text-base text-gray-600">
-            Chest, Triceps, Shoulders
+          {exercise.targetMuscles && exercise.targetMuscles.length > 0
+          ? exercise.targetMuscles.join(', ') // Joining the array into a string with commas
+          : 'No target muscles specified'}
           </Text>
         </View>
 
@@ -67,13 +71,7 @@ const Description = () => {
         <View className="p-5 bg-white rounded-xl shadow-lg mb-5">
           <Text className="text-xl font-bold text-gray-800 mb-3">Instructions</Text>
           <Text className="text-base text-gray-600">
-            1. Start by placing your hands shoulder-width apart on the floor.
-            {'\n'}
-            2. Lower your body towards the floor by bending your elbows.
-            {'\n'}
-            3. Push yourself back up to the starting position.
-            {'\n'}
-            4. Repeat for the desired number of reps.
+            {exercise.instructions || 'No Instructions Available'}
           </Text>
         </View>
 
@@ -83,7 +81,7 @@ const Description = () => {
         <View className="p-5 bg-white rounded-xl shadow-lg">
           <Text className="text-xl font-bold text-gray-800 mb-3">Sets and Reps</Text>
           <Text className="text-base text-gray-600">
-            3 Sets x 12-15 Reps
+            `${exercise.sets}` Sets x `${exercise.reps}` Reps
           </Text>
         </View>
       </ScrollView>
