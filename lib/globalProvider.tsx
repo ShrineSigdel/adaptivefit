@@ -19,7 +19,7 @@ interface GlobalContextType {
   isLogged: boolean;
   user: User | null;
   loading: boolean;
-  preferences: Preferences | null;
+  preferences: Preferences;
   refetchUser: () => Promise<void>;
   setUserPreferences: (key: keyof Preferences, value: string) => void;
   
