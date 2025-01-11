@@ -7,15 +7,8 @@ import dummyImage from '@/assets/images/dummy.png';
 import { getExercises } from '@/lib/appwrite';
 
 const Exercises = () => {
-<<<<<<< HEAD
-
-  const appExercies = getExercises();
-  console.log(appExercies);
-  // Dummy data for exercises
-=======
   const router = useRouter();
 
->>>>>>> 0d0131e (ui update)
   const exercises = [
     { id: 1, name: 'Push-ups', image: dummyImage },
     { id: 2, name: 'Squats', image: dummyImage },
