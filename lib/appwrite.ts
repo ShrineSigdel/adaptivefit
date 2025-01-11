@@ -1,6 +1,6 @@
 import { Client, Account, OAuthProvider, Avatars, Databases, Query } from 'react-native-appwrite';
 import * as Linking from 'expo-linking';
-import * as WebBrowser from 'expo-web-browser';
+
 import { openAuthSessionAsync } from 'expo-web-browser';
 
 //client configs
@@ -31,17 +31,14 @@ export async function login() {
     // Create a deep link that works across Expo environments
     // Ensure localhost is used for the hostname to validation error for success/failure URLs
     const redirectUri = Linking.createURL("/page1");
-    console.log("Generated Redirect URI:", redirectUri);
 
     //create a login url
     const loginUri = await account.createOAuth2Token(OAuthProvider.Google, redirectUri);
-    console.log("Generated Login URI:", loginUri);
     if (!loginUri)
       throw new Error("Create OAuth2 token failed1");
 
-        // Open loginUrl and listen for the redirect(will return a url with secret and userId)
-        const browserResult = await openAuthSessionAsync(loginUri.toString(), redirectUri);
-        console.log("Browser Result:", browserResult);
+    // Open loginUrl and listen for the redirect(will return a url with secret and userId)
+    const browserResult = await openAuthSessionAsync(loginUri.toString(), redirectUri);
 
     if (browserResult.type !== "success")
       throw new Error("Create OAuth2 token failed2");
@@ -87,30 +84,27 @@ export async function getCurrentUser() {
   }
 }
 
-  //user preferences 
-  export const saveUserPreferences = async (preferences:any) =>{
-    try {
-      const result = await account.updatePrefs(preferences);
-      console.log("Preferences Updated:", result);
-    } catch (error) {
-      console.log(error);
-    }
+//user preferences 
+export const saveUserPreferences = async (preferences: any) => {
+  try {
+    const result = await account.updatePrefs(preferences);
+  } catch (error) {
+    console.log(error);
   }
-  
+}
+
 
 
 const database = new Databases(client);
-const collectionId = "67820c19002eb77dfa84";
+const ExerciseCollectionId = "67820c19002eb77dfa84";
 const databaseId = "67820b040029b35a386e";
 
-export async function getExercises(impairmentType:string, impairmentLevel:string) { //pass in user preferences to be used as query
+export async function getExercises(impairmentType: string, impairmentLevel: string) { //pass in user preferences to be used as query
   try {
-    const result = await database.listDocuments(databaseId, collectionId, [
+    const result = await database.listDocuments(databaseId, ExerciseCollectionId, [
       Query.search("impairmentType", impairmentType),
       Query.equal("impairmentLevel", impairmentLevel)
     ]);
-    console.log(`Fetching exercises ...`);
-    console.log(result);
     return result.documents;
   } catch (error) {
     console.log(error);
@@ -118,14 +112,108 @@ export async function getExercises(impairmentType:string, impairmentLevel:string
   }
 }
 
-export async function getExerciseDetails(exerciseId:string) {
+export async function getExerciseDetails(exerciseId: string) {
   try {
-    const result = await database.getDocument(databaseId, collectionId, exerciseId);
-    console.log(`Fetching exercise details ...`);
-    console.log(result);
+    const result = await database.getDocument(databaseId, ExerciseCollectionId, exerciseId);
     return result;
   } catch (error) {
     console.log(error);
     return null;
   }
-} 
+}
+
+
+const MyWorkoutCollectionId = "6782bcba000a3a06bc8f";
+
+export async function createWorkout(userId: string, exerciseId: string) {
+  try {
+    const workout = {
+      userId, // Associate with user
+      exercises: [exerciseId], // Initialize with the first exercise
+    };
+
+    const result = await database.createDocument(databaseId, MyWorkoutCollectionId, 'unique()', workout);
+    console.log('Workout created successfully:', result);
+    return result;
+  } catch (error) {
+    console.error('Error creating workout:', error);
+    return null;
+  }
+}
+
+
+export async function addExerciseToWorkout(workoutId: string, exerciseId: string) {
+  try {
+    // Fetch the workout document
+    const workout = await database.getDocument(databaseId, MyWorkoutCollectionId, workoutId);
+
+    // Update the exercises array
+    const updatedExercises = [...workout.exercises, exerciseId];
+    const result = await database.updateDocument(databaseId, MyWorkoutCollectionId, workoutId, {
+      exercises: updatedExercises,
+    });
+
+    console.log('Exercise added successfully:', result);
+    return result;
+  } catch (error) {
+    console.error('Error adding exercise to workout:', error);
+    return null;
+  }
+}
+
+
+export const getMyWorkout = async (userId: string) => {
+  try {
+    const workouts = await database.listDocuments(databaseId, MyWorkoutCollectionId, [
+      Query.equal('userId', userId),
+    ]);
+
+    // Fetch detailed exercises for each workout
+    const workoutsWithExercises = await Promise.all(
+      workouts.documents.map(async (workout) => {
+        const exerciseDetails = await Promise.all(
+          workout.exercises.map(async (exerciseId: string) => {
+            try {
+              const exercise = await database.getDocument(databaseId, ExerciseCollectionId, exerciseId);
+              return exercise; // Return the exercise details
+            } catch (error) {
+              console.error(`Error fetching exercise with ID ${exerciseId}:`, error);
+              return null;
+            }
+          })
+        );
+
+        return { ...workout, exercises: exerciseDetails.filter(Boolean) }; // Filter out nulls
+      })
+    );
+
+    return workoutsWithExercises;
+  } catch (error) {
+    console.error('Error fetching workouts:', error);
+    return [];
+  }
+};
+
+export async function getWorkoutId(userId: string) {
+  try {
+    console.log('Fetching workout for userId:', userId);
+
+    const workouts = await database.listDocuments(databaseId, MyWorkoutCollectionId, [
+      Query.equal('userId', userId), // Ensure this matches your database schema
+    ]);
+
+    if (workouts.documents.length === 0) {
+      console.log('No workout found for the user');
+      return null; // Return null if no workout exists
+    }
+
+    const workoutId = workouts.documents[0].$id;
+    console.log('Found workout ID:', workoutId);
+    return workoutId;
+  } catch (error) {
+    console.error('Error fetching workout ID:', error);
+    return null;
+  }
+}
+
+
