@@ -8,7 +8,7 @@ type OnBoardingHeaderProps = {
   color3: string;
 };
 
-const OnBoardingHeader: React.FC<OnBoardingHeaderProps> = ({ color1, color2, color3, isFirstPage = false }) => {
+const OnBoardingHeader: React.FC<OnBoardingHeaderProps> = ({ color1, color2, color3 }) => {
   const [barWidth1] = useState(new Animated.Value(0));
   const [barWidth2] = useState(new Animated.Value(0));
   const [barWidth3] = useState(new Animated.Value(0));
@@ -41,12 +41,12 @@ const OnBoardingHeader: React.FC<OnBoardingHeaderProps> = ({ color1, color2, col
 
   return (
     <View className="flex flex-row gap-[10px] mt-5 ml-[5px]">
-        <TouchableOpacity onPress={goBack} className="flex justify-center items-center">
-          <Image
-            source={require('../assets/images/left-icon.png')}
-            style={{ width: 42, height: 42 }}
-          />
-        </TouchableOpacity>
+      <TouchableOpacity onPress={goBack} className="flex justify-center items-center">
+        <Image
+          source={require('../assets/images/left-icon.png')}
+          style={{ width: 42, height: 42 }}
+        />
+      </TouchableOpacity>
 
       {/* Progress Bar */}
       <View className="flex flex-row w-[300px] justify-around mt-[18px]">

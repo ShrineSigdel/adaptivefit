@@ -4,14 +4,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { Ionicons } from '@expo/vector-icons';
-import { getExerciseDetails } from '@/lib/appwrite';  
+import { getExerciseDetails } from '@/lib/appwrite';
 
 const Description = () => {
   const { exerciseId } = useLocalSearchParams();
   const [exercise, setExercise] = useState<any>(null);
   const router = useRouter();
 
-  console.log("exerciseId:", exerciseId);
   useEffect(() => {
     const fetchExercise = async () => {
       try {
@@ -19,22 +18,20 @@ const Description = () => {
         const exerciseData = await getExerciseDetails(exerciseId as string);
         setExercise(exerciseData);
       } catch (error) {
-        console.log("Error fetching exercise details", error);
+        console.error("Error fetching exercise details:", error);
       }
     };
 
     fetchExercise();
   }, [exerciseId]);
 
-  // Ensure player is initialized only when exercise is available
-  const player = useVideoPlayer(exercise?.videoUrl, (player) => {
+  // Initialize the video player when the exercise is loaded
+  const player = useVideoPlayer(exercise?.videourl, (player) => {
     player.loop = true;
     player.pause();
   });
 
-  const { isPlaying } = player;
-
-  // Early return if exercise is null
+  // Early return while data is loading
   if (!exercise) {
     return (
       <SafeAreaView className="flex-1 justify-center items-center bg-white">
@@ -45,12 +42,13 @@ const Description = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
+      {/* Header */}
       <View className="flex-row items-center mt-8 px-5">
         <TouchableOpacity onPress={() => router.back()} className="mr-2">
           <Ionicons name="arrow-back" size={24} color="#198BEF" />
         </TouchableOpacity>
         <Text className="text-2xl font-bold text-gray-800">
-          {exercise?.name || 'Loading...'}
+          {exercise.name || 'Exercise'}
         </Text>
       </View>
 
@@ -69,8 +67,8 @@ const Description = () => {
         <View className="p-5 bg-white rounded-xl shadow-lg mb-5">
           <Text className="text-xl font-bold text-gray-800 mb-3">Target Muscle Group</Text>
           <Text className="text-base text-gray-600">
-            {exercise?.targetMuscles?.length > 0
-              ? exercise?.targetMuscles?.join(', ') // Joining the array into a string with commas
+            {exercise.target?.length > 0
+              ? exercise.target.join(', ') // Joining array into a string
               : 'No target muscles specified'}
           </Text>
         </View>
@@ -79,15 +77,24 @@ const Description = () => {
         <View className="p-5 bg-white rounded-xl shadow-lg mb-5">
           <Text className="text-xl font-bold text-gray-800 mb-3">Instructions</Text>
           <Text className="text-base text-gray-600">
-            {exercise?.instructions || 'No Instructions Available'}
+            {exercise.instructions || 'No Instructions Available'}
           </Text>
         </View>
 
         {/* Sets and Reps Section */}
-        <View className="p-5 bg-white rounded-xl shadow-lg">
+        <View className="p-5 bg-white rounded-xl shadow-lg mb-5">
           <Text className="text-xl font-bold text-gray-800 mb-3">Sets and Reps</Text>
           <Text className="text-base text-gray-600">
-            {`${exercise?.sets}`} Sets x {`${exercise?.reps}`} Reps
+            {exercise.sets ? `${exercise.sets} Sets` : 'N/A'} x{' '}
+            {exercise.reps ? `${exercise.reps} Reps` : 'N/A'}
+          </Text>
+        </View>
+
+        {/* Source Section */}
+        <View className="p-5 bg-white rounded-xl shadow-lg">
+          <Text className="text-xl font-bold text-gray-800 mb-3">Source</Text>
+          <Text className="text-base text-blue-600">
+            {exercise.source || 'No source available'}
           </Text>
         </View>
       </ScrollView>
@@ -96,4 +103,3 @@ const Description = () => {
 };
 
 export default Description;
-
