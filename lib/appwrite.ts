@@ -1,4 +1,4 @@
-import { Client, Account, OAuthProvider, Avatars, Databases } from 'react-native-appwrite';
+import { Client, Account, OAuthProvider, Avatars, Databases, Query } from 'react-native-appwrite';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import { openAuthSessionAsync } from 'expo-web-browser';
@@ -103,9 +103,12 @@ const database = new Databases(client);
 const collectionId = "67820c19002eb77dfa84";
 const databaseId = "67820b040029b35a386e";
 
-export async function getExercises() {
+export async function getExercises(impairmentType:string, impairmentLevel:string) { //pass in user preferences to be used as query
   try {
-    const result = await database.listDocuments(databaseId, collectionId);
+    const result = await database.listDocuments(databaseId, collectionId, [
+      Query.search("impairmentType", impairmentType),
+      Query.equal("impairmentLevel", impairmentLevel)
+    ]);
     console.log(`Fetching exercises ...`);
     console.log(result);
     return result.documents;
@@ -114,3 +117,15 @@ export async function getExercises() {
     return [];
   }
 }
+
+export async function getExerciseDetails(exerciseId:string) {
+  try {
+    const result = await database.getDocument(databaseId, collectionId, exerciseId);
+    console.log(`Fetching exercise details ...`);
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+} 

@@ -1,20 +1,26 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import SearchBar from '@/components/SearchBar';
 import ExerciseCard from '@/components/ExerciseCard';
 import dummyImage from '@/assets/images/dummy.png';
 import { getExercises } from '@/lib/appwrite';
+import { useGlobalContext } from '@/lib/globalProvider';
 
 const Exercises = () => {
+  const [exercises, setExercises] = useState<any[]>([]);
+  const {preferences} = useGlobalContext(); //get the user preferences
   const router = useRouter();
 
-  const exercises = [
-    { id: 1, name: 'Push-ups', image: dummyImage },
-    { id: 2, name: 'Squats', image: dummyImage },
-    { id: 3, name: 'Deadlifts', image: dummyImage },
-    { id: 4, name: 'Pull-ups', image: dummyImage },
-  ];
+  useEffect(() => {
+    const fetchExercises = async () => {
+      console.log("prefernces from exercises:", preferences);
+      const response = await getExercises(preferences.impairementType, preferences.impairementLevel);
+      setExercises(response);
+    };
+
+    fetchExercises();
+  },[]);
 
   const handleAddToWorkout = (exerciseName: string) => {
     console.log(`${exerciseName} added to your workout!`);
@@ -50,11 +56,11 @@ const Exercises = () => {
         <View className="flex-row flex-wrap justify-between">
           {exercises.map((exercise) => (
             <ExerciseCard
-              key={exercise.id}
+              key={exercise.$id}
               name={exercise.name || 'Exercise'} // Handle possible empty name
-              image={exercise.image}
+              image={exercise.thumbnail}
               onAddToWorkout={() => handleAddToWorkout(exercise.name)}
-              onPress={() => router.push(`/exercise-description/${exercise.id}`)}
+              onPress={() => router.push(`/exercise-description/${exercise.$id}`)}
             />
           ))}
         </View>

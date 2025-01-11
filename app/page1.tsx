@@ -24,10 +24,10 @@ const Page1: React.FC = () => {
     };
 
     const options = [
-        { title: 'Upper limb - Prothesesis', subOptions: ['Single', 'Double'] },
-        { title: 'Lower limb - Prothesesis', subOptions: ['Single', 'Double'] },
-        { title: 'Upper limb - Amputee', subOptions: ['Single', 'Double'] },
-        { title: 'Lower limb - Amputee', subOptions: ['Single', 'Double'] },
+        { title: 'Upper-limb Prosthesis', subOptions: ['single', 'souble'] },
+        { title: 'Lower-limb Prosthesis', subOptions: ['single', 'double'] },
+        { title: 'Upper-limb Amputee', subOptions: ['single', 'double'] },
+        { title: 'Lower-limb Amputee', subOptions: ['single', 'double'] },
     ];
 
     const handleOptionPress = (option: string) => {
