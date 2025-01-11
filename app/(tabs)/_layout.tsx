@@ -7,7 +7,7 @@ const MyComponent = () => {
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
         { key: 'exercises', title: 'Exercises', focusedIcon: 'arm-flex', unfocusedIcon: 'arm-flex-outline' },
-        { key: 'myworkout', title: 'My Workout', focusedIcon: 'star-box', unfocusedIcon: 'star-box-outline' },
+        { key: 'myworkout', title: 'My Workout', focusedIcon: 'clipboard-check', unfocusedIcon: 'clipboard-text-outline' },
     ]);
 
     const renderScene = BottomNavigation.SceneMap({

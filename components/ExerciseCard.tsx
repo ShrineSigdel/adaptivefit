@@ -11,7 +11,7 @@ interface ExerciseCardProps {
 const ExerciseCard: React.FC<ExerciseCardProps> = ({ name, image, onAddToWorkout, onPress }) => {
   return (
     <TouchableOpacity
-      onPress={onPress} // Navigate to exercise description
+      onPress={onPress}
       className="w-[45%] bg-[#f3eef5] rounded-lg overflow-hidden mb-4 mx-2"
       style={{
         shadowColor: '#000',
@@ -21,9 +21,11 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({ name, image, onAddToWorkout
         elevation: 6, // Android shadow
       }}
     >
+      {/* Exercise Thumbnail */}
       <Image source={image} className="w-full h-32" resizeMode="cover" style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8 }} />
+      {/* Card Content */}
       <View className="p-3">
-        <Text className="text-lg font-semibold text-black-300">{name}</Text>
+        <Text className="text-lg font-semibold text-black">{name}</Text>
         <TouchableOpacity
           onPress={(e) => {
             e.stopPropagation(); // Prevent navigation when clicking the button
