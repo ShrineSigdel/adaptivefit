@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { getCurrentUser } from "./appwrite";
+import { getUserPreferences } from "./appwrite";
+import { account } from "./appwrite";
 
 interface User {
   $id: string;
@@ -39,7 +41,7 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
     impairementType: '',
     impairementLevel: '',
     exerciseRoutine: '',
-    assistanceNeeded: ''
+    assistanceNeeded: '', 
   });
 
   //to get the user during login or mounting the global provider
@@ -48,10 +50,15 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
       setLoading(true);
       const currentUser = await getCurrentUser();
       if (currentUser) {
-        console.log("Current User:", currentUser);
         setUser(currentUser);
+        const userPreferences = await getUserPreferences(currentUser.$id);
+        setPreferences(userPreferences);
+      } else {
+        throw new Error("No user session found");
       }
-    } catch {
+    } catch (error) {
+      console.log("Error fetching user or invalid session. Clearing sessions...");
+      await account.deleteSessions(); // Clear any cached session
       setUser(null);
     } finally {
       setLoading(false);
@@ -67,6 +74,11 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
     };
     setPreferences(newPreferences);
   }
+
+  // Initialize user on app mount
+  useEffect(() => {
+    initializeUser();
+  }, []);
 
   //any changes in preferences 
   useEffect(() => {
@@ -104,7 +116,7 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
   );
 };
 
-export const useGlobalContext = () => {
+export const useGlobalContext = ():GlobalContextType => {
   const context = useContext(GlobalContext);
   if (!context) {
     throw new Error("useGlobalContext must be used within a GlobalProvider");
@@ -113,3 +125,4 @@ export const useGlobalContext = () => {
 };
 
 export default GlobalProvider;
+

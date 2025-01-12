@@ -38,7 +38,7 @@ export async function login() {
     console.log("Generated Login URI:", loginUri);
     if (!loginUri)
       throw new Error("Create OAuth2 token failed1");
-
+    
         // Open loginUrl and listen for the redirect(will return a url with secret and userId)
         const browserResult = await openAuthSessionAsync(loginUri.toString(), redirectUri);
         console.log("Browser Result:", browserResult);
@@ -121,7 +121,7 @@ export async function getExercises(impairmentType:string, impairmentLevel:string
 export async function getExerciseDetails(exerciseId:string) {
   try {
     const result = await database.getDocument(databaseId, collectionId, exerciseId);
-    console.log(`Fetching exercise details ...`);
+    console.log("Fetching exercise details ...");
     console.log(result);
     return result;
   } catch (error) {
@@ -129,3 +129,17 @@ export async function getExerciseDetails(exerciseId:string) {
     return null;
   }
 } 
+
+
+export const getUserPreferences = async (userId:string) => {
+  try {
+    const result = await account.getPrefs();
+    if(result){
+    console.log("User Preferences:", result);
+    return result;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
