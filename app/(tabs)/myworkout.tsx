@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import MyWorkoutCard from '@/components/MyWorkoutCard';
 import { getMyWorkout } from '@/lib/appwrite';
-import dummyImage from '@/assets/images/dummy.png'
 import { useGlobalContext } from '@/lib/globalProvider';
 
 const MyWorkout = () => {
   const [workouts, setWorkouts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // Track loading state
   const router = useRouter();
   const streakIcon = require('../../assets/images/streak.png');
   const { user } = useGlobalContext();
@@ -27,6 +27,8 @@ const MyWorkout = () => {
         }
       } catch (error) {
         console.error("Error fetching workouts:", error);
+      } finally {
+        setIsLoading(false); // Stop loading
       }
     };
 
@@ -81,38 +83,46 @@ const MyWorkout = () => {
         </View>
 
         {/* Workouts Section */}
-        <ScrollView contentContainerStyle={{ paddingBottom: 80 }} className="px-5">
-          <View className="flex items-center">
-            {workouts.map((workout) => (
-              <View key={workout.$id} className="w-full">
-                {/* Workout Card */}
-                <Text className="font-poppins font-bold text-lg">{`Workout ${workout.$id}`}</Text>
-                {workout.exercises.map((exercise: any) => (
-                  <MyWorkoutCard
-                    key={exercise.$id}
-                    title={exercise.name} // Use exercise name
-                    image={exercise.thumbnail ? { uri: exercise.thumbnail } : dummyImage}// Use exercise image
-                    sets={exercise.sets || 0} // Use exercise sets
-                    reps={exercise.reps || 0} // Use exercise reps
-                    onPress={() => router.push(`/exercise-description/${exercise.$id}`)}
-                    onRemove={() => handleRemoveExercise(workout.$id, exercise.$id)}
-                    onMarkComplete={() => handleMarkComplete(exercise.$id)}
-                  />
-                ))}
-              </View>
-            ))}
+        {isLoading ? (
+          // Loading Animation
+          <View className="flex-1 justify-center items-center">
+            <ActivityIndicator size="large" color="#198BEF" />
           </View>
+        ) : (
+          <ScrollView contentContainerStyle={{ paddingBottom: 80 }} className="px-5">
+            <View className="flex items-center justify-center">
+              {workouts.map((workout) => (
+                <View key={workout.$id} className="w-full flex items-center justify-center">
+                  {/* Workout Card */}
+                  {workout.exercises.map((exercise: any) => (
+                    <MyWorkoutCard
+                      key={exercise.$id}
+                      title={exercise.name} // Use exercise name
+                      image={exercise.thumbnail ? { uri: exercise.thumbnail } : dummyImage}// Use exercise image
+                      sets={exercise.sets || 0} // Use exercise sets
+                      reps={exercise.reps || 0} // Use exercise reps
+                      onPress={() => router.push(`/exercise-description/${exercise.$id}`)}
+                      onRemove={() => handleRemoveExercise(workout.$id, exercise.$id)}
+                      onMarkComplete={() => handleMarkComplete(exercise.$id)}
+                    />
+                  ))}
+                </View>
+              ))}
+            </View>
 
-          {/* Workout Done Button */}
-          <View className="flex items-center mt-5 mb-10">
-            <TouchableOpacity
-              onPress={handleWorkoutDone}
-              className="bg-[#198BEF] py-3 px-8 rounded-xl"
-            >
-              <Text className="text-white text-[18px] font-bold">Workout Done</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
+            {/* Workout Done Button */}
+            {workouts.length > 0 && (
+              <View className="flex items-center mt-5 mb-10">
+                <TouchableOpacity
+                  onPress={handleWorkoutDone}
+                  className="bg-[#198BEF] py-3 px-8 rounded-xl"
+                >
+                  <Text className="text-white text-[18px] font-bold">Workout Done</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </ScrollView>
+        )}
       </View>
     </SafeAreaView>
   );
