@@ -29,7 +29,7 @@ AdaptiveFit is an innovative fitness app designed specifically for individuals w
 - Mark exercises as completed to track progress.
 
 ### **Exercise Details**
-- Detailed descriptions and images for each exercise.
+- Detailed descriptions and videos for each exercise.
 - Options to modify or adapt exercises to user preferences.
 
 ### **Login/Authentication**
