@@ -36,9 +36,10 @@ export async function login() {
     const loginUri = await account.createOAuth2Token(OAuthProvider.Google, redirectUri);
     if (!loginUri)
       throw new Error("Create OAuth2 token failed1");
-
-    // Open loginUrl and listen for the redirect(will return a url with secret and userId)
-    const browserResult = await openAuthSessionAsync(loginUri.toString(), redirectUri);
+    
+        // Open loginUrl and listen for the redirect(will return a url with secret and userId)
+        const browserResult = await openAuthSessionAsync(loginUri.toString(), redirectUri);
+        console.log("Browser Result:", browserResult);
 
     if (browserResult.type !== "success")
       throw new Error("Create OAuth2 token failed2");
@@ -217,3 +218,17 @@ export async function getWorkoutId(userId: string) {
 }
 
 
+
+
+export const getUserPreferences = async (userId:string) => {
+  try {
+    const result = await account.getPrefs();
+    if(result){
+    console.log("User Preferences:", result);
+    return result;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
