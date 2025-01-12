@@ -1,50 +1,85 @@
-# Welcome to your Expo app 👋
+# AdaptiveFit
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+AdaptiveFit is an innovative fitness app designed specifically for individuals with physical disabilities. The app aims to provide tailored workout plans, personalized guidance, and an inclusive fitness community that helps users move beyond barriers.
 
-## Get started
+## 🌟 Features
 
-1. Install dependencies
+- **Personalized Workouts**: Customized exercises that cater to individual needs and physical abilities.
+- **Community Support**: A platform to connect, share progress, and motivate each other.
+- **Progress Tracking**: Keep track of your fitness goals and achievements over time.
+- **Accessibility-Focused Design**: Designed to be intuitive and accessible for users with varying levels of physical ability.
+- **Streaks and Motivation**: Celebrate daily and weekly streaks to keep users motivated.
 
+## 🚀 Technology Stack
+
+- **Frontend**: React Native (Expo)
+- **Backend**: Appwrite
+- **Styling**: Tailwind CSS (NativeWind)
+- **State Management**: React Context API
+- **Navigation**: Expo Router
+
+## 🛠️ Key Components
+
+### **Home Screen**
+- Displays user streaks and workout goals.
+- Access to daily workout routines.
+
+### **My Workouts**
+- View and manage personalized workout plans.
+- Mark exercises as completed to track progress.
+
+### **Exercise Details**
+- Detailed descriptions and images for each exercise.
+- Options to modify or adapt exercises to user preferences.
+
+### **Login/Authentication**
+- Google-based login for quick and secure access.
+- User data is securely stored and managed via Appwrite.
+
+## 🎯 Goals
+
+1. Empower individuals with disabilities to achieve their fitness goals.
+2. Foster an inclusive fitness community.
+3. Provide a seamless, accessible, and user-friendly experience.
+
+## 📲 Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/nishanadhikari1/adaptivefit.git
+   cd adaptivefit
+
+2. Install Dependencies:
    ```bash
    npm install
-   ```
 
-2. Start the app
-
+3. Start the development server:
    ```bash
-    npx expo start
-   ```
+   npx expo start
 
-In the output, you'll find options to open the app in a
+4. To run the app on your mobile device, install Expo Go and scan the QR code that appears in your terminal or browser when the development server starts.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+# Contributing
+We welcome contributions to improve AdaptiveFit! Whether it's a bug fix, new feature, or a suggestion, feel free to open an issue or a pull request.
+To start contributing or making changes to the app, follow these steps:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+1. Fork the repository and clone your for to your local machine:
+   ```bash
+   git clone https://github.com/ShrineSigdel/adaptivefit.git
+   cd adaptivefit
 
-## Get a fresh project
+2. Create a new branch for your changes: 
+   ```bash
+   git checkout -b feature/your-feature-name
 
-When you're ready, run:
+3. Make your changes and commit them:
+   ```bash
+   git commit -m "Add your changes"
 
-```bash
-npm run reset-project
-```
+4. Push your changes to your fork
+   ```bash
+   git push origin feature/your-feature-name
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+4. Open a pull request to merge your changes into the main repository.
 
-## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
