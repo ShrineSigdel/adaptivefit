@@ -26,7 +26,8 @@ const LoginScreen = () => {
     const handleLogin = async () => {
         try {
             const result = await login();
-            refetchUser(); // Fetch user details after login
+            if(result)
+                refetchUser(); // Fetch user details after login
         } catch (error) {
             console.error(error);
             Alert.alert('Error', 'Failed to login');
