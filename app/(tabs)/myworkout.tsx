@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
+import { View, Text, Image, ScrollView, SafeAreaView, ActivityIndicator, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 import MyWorkoutCard from '@/components/MyWorkoutCard';
 import { getMyWorkout } from '@/lib/appwrite';
@@ -7,45 +7,46 @@ import { useGlobalContext } from '@/lib/globalProvider';
 
 const MyWorkout = () => {
   const [workouts, setWorkouts] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // Track loading state
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const router = useRouter();
   const streakIcon = require('../../assets/images/streak.png');
   const { user } = useGlobalContext();
 
   const todayIndex = new Date().getDay();
 
-  // Fetch workouts on mount
-  useEffect(() => {
-    const fetchWorkouts = async () => {
-      try {
-        const userId = user?.$id; // Replace with the authenticated userId
-        if (userId) {
-          const fetchedWorkouts = await getMyWorkout(userId);
-          setWorkouts(fetchedWorkouts);
-        } else {
-          console.error("User ID is undefined");
-        }
-      } catch (error) {
-        console.error("Error fetching workouts:", error);
-      } finally {
-        setIsLoading(false); // Stop loading
+  // Function to fetch workouts
+  const fetchWorkouts = async () => {
+    try {
+      const userId = user?.$id;
+      if (userId) {
+        const fetchedWorkouts = await getMyWorkout(userId);
+        setWorkouts(fetchedWorkouts);
+      } else {
+        console.error('User ID is undefined');
       }
-    };
-
-    fetchWorkouts();
-  }, []);
-
-  // Handle marking workout as completed
-  const handleWorkoutDone = () => {
-    console.log('Workout completed!');
+    } catch (error) {
+      console.error('Error fetching workouts:', error);
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false); // Stop refreshing after data is fetched
+    }
   };
 
-  // Handle removing an exercise (optional, can implement update logic)
+  // Trigger the refresh when user pulls down
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchWorkouts();
+  };
+
+  useEffect(() => {
+    fetchWorkouts();
+  }, [user]);
+
   const handleRemoveExercise = (workoutId: string, exerciseId: string) => {
     console.log(`Removing exercise ${exerciseId} from workout ${workoutId}`);
   };
 
-  // Handle marking an exercise as completed
   const handleMarkComplete = (exerciseId: string) => {
     console.log(`Exercise ${exerciseId} marked as completed.`);
   };
@@ -53,7 +54,6 @@ const MyWorkout = () => {
   return (
     <SafeAreaView className="flex-1">
       <View className="bg-white flex-1">
-        {/* Header Section */}
         <View className="flex flex-col h-[25%] px-5 pt-2">
           <View className="flex-row justify-between items-center pt-10">
             <Text className="text-[30px] font-poppins font-bold">My Workouts</Text>
@@ -62,8 +62,6 @@ const MyWorkout = () => {
               <Text className="font-bold text-[28px]">{workouts.length}</Text>
             </View>
           </View>
-
-          {/* Days of the Week */}
           <View className="flex flex-row justify-between mt-4">
             {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
               <View
@@ -82,25 +80,26 @@ const MyWorkout = () => {
           </View>
         </View>
 
-        {/* Workouts Section */}
         {isLoading ? (
-          // Loading Animation
           <View className="flex-1 justify-center items-center">
             <ActivityIndicator size="large" color="#198BEF" />
           </View>
         ) : (
-          <ScrollView contentContainerStyle={{ paddingBottom: 80 }} className="px-5">
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 80 }}
+            className="px-5"
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          >
             <View className="flex items-center justify-center">
               {workouts.map((workout) => (
                 <View key={workout.$id} className="w-full flex items-center justify-center">
-                  {/* Workout Card */}
                   {workout.exercises.map((exercise: any) => (
                     <MyWorkoutCard
                       key={exercise.$id}
-                      title={exercise.name} // Use exercise name
-                      image={exercise.thumbnail ? { uri: exercise.thumbnail } : dummyImage}// Use exercise image
-                      sets={exercise.sets || 0} // Use exercise sets
-                      reps={exercise.reps || 0} // Use exercise reps
+                      title={exercise.name}
+                      image={exercise.thumbnail ? { uri: exercise.thumbnail } : dummyImage}
+                      sets={exercise.sets || 0}
+                      reps={exercise.reps || 0}
                       onPress={() => router.push(`/exercise-description/${exercise.$id}`)}
                       onRemove={() => handleRemoveExercise(workout.$id, exercise.$id)}
                       onMarkComplete={() => handleMarkComplete(exercise.$id)}
@@ -109,18 +108,6 @@ const MyWorkout = () => {
                 </View>
               ))}
             </View>
-
-            {/* Workout Done Button */}
-            {workouts.length > 0 && (
-              <View className="flex items-center mt-5 mb-10">
-                <TouchableOpacity
-                  onPress={handleWorkoutDone}
-                  className="bg-[#198BEF] py-3 px-8 rounded-xl"
-                >
-                  <Text className="text-white text-[18px] font-bold">Workout Done</Text>
-                </TouchableOpacity>
-              </View>
-            )}
           </ScrollView>
         )}
       </View>
