@@ -1,41 +1,50 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
+import { Text, View, Image, ScrollView, SafeAreaView, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 import SearchBar from '@/components/SearchBar';
 import ExerciseCard from '@/components/ExerciseCard';
 import dummyImage from '@/assets/images/dummy.png';
-import { getExercises } from '@/lib/appwrite';
-import { createWorkout, addExerciseToWorkout, getWorkoutId } from '@/lib/appwrite';
+import { getExercises, createWorkout, addExerciseToWorkout, getMyWorkout, getWorkoutId } from '@/lib/appwrite';
 import { useGlobalContext } from '@/lib/globalProvider';
-
 
 const Exercises = () => {
   const [exercises, setExercises] = useState<any[]>([]);
-  const { preferences } = useGlobalContext(); //get the user preferences
-  const { user } = useGlobalContext(); //get the user from global context
+  const [refreshing, setRefreshing] = useState(false); // State to manage refresh control
+  const { preferences, user } = useGlobalContext(); // Get user and preferences from global context
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchExercises = async () => {
-      console.log("prefernces from exercises:", preferences);
+  // Function to fetch exercises
+  const fetchExercises = async () => {
+    try {
       const response = await getExercises(preferences.impairementType, preferences.impairementLevel);
       setExercises(response);
-    };
+    } catch (error) {
+      console.error('Error fetching exercises:', error);
+    } finally {
+      setRefreshing(false); // Stop refreshing after data is fetched
+    }
+  };
+
+  // Trigger refresh when user pulls down
+  const onRefresh = () => {
+    setRefreshing(true);
     fetchExercises();
-  }, []);
+  };
+
+  useEffect(() => {
+    fetchExercises(); // Fetch exercises initially
+  }, [preferences]);
 
   const handleAddToWorkout = async (exerciseId: string) => {
     try {
-      // Ensure user exists
       if (!user || !user.$id) {
         console.error('User ID is undefined');
         return;
       }
 
-      // Retrieve workout ID for the user
-      let workoutId: string | null = await getWorkoutId(user.$id);
+      let workoutId = await getWorkoutId(user.$id);
 
-      // If no workout exists, create one
+      // Create a new workout if one doesn't exist
       if (!workoutId) {
         console.log('No workout found. Creating a new workout...');
         const newWorkout = await createWorkout(user.$id, exerciseId);
@@ -48,13 +57,20 @@ const Exercises = () => {
         }
       }
 
-      // Ensure workout ID is valid
-      if (!workoutId) {
-        console.error('Workout ID is null or undefined');
+      // Fetch the current workout to check for duplicates
+      const currentWorkout = await getMyWorkout(user.$id);
+
+      const isExerciseInWorkout = currentWorkout.some(
+        (workout) =>
+          workout.$id === workoutId &&
+          workout.exercises.some((exercise: any) => exercise.$id === exerciseId)
+      );
+
+      if (isExerciseInWorkout) {
+        console.log(`Exercise ${exerciseId} is already in the workout.`);
         return;
       }
 
-      // Add the exercise to the workout
       console.log(`Adding exercise (${exerciseId}) to workout (${workoutId})...`);
       const result = await addExerciseToWorkout(workoutId, exerciseId);
       if (result) {
@@ -63,50 +79,40 @@ const Exercises = () => {
         console.error(`Failed to add ${exerciseId} to workout`);
       }
     } catch (error) {
-      console.error('An error occurred while adding the exercise to the workout:', error);
+      console.error('Error adding exercise to the workout:', error);
     }
   };
-
-
-
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="px-5 pt-5">
-        {/* Header */}
         <View className="flex-row items-center mt-5">
           <Image source={dummyImage} className="w-10 h-10 rounded-full" />
           <View className="ml-3">
-            <Text className="text-2xl font-bold text-gray-800 font-robotoMono">
-              Welcome Back
-            </Text>
+            <Text className="text-2xl font-bold text-gray-800 font-robotoMono">Welcome Back</Text>
             <Text className="text-3xl font-bold text-gray-900 font-robotoMono">
               {user?.name ?? 'Guest'}
             </Text>
           </View>
         </View>
-
-        {/* Search Bar */}
         <View className="mt-5">
           <SearchBar />
         </View>
       </View>
-
-      {/* Section Title */}
       <View className="my-5">
-        <Text className="text-xl font-bold text-gray-800 pl-5 font-robotoMono">
-          Recommended For You
-        </Text>
+        <Text className="text-xl font-bold text-gray-800 pl-5 font-robotoMono">Recommended For You</Text>
       </View>
-
-      {/* Exercise Cards */}
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-5">
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        className="px-5"
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
         <View className="flex-row flex-wrap justify-between">
           {exercises.map((exercise) => (
             <ExerciseCard
               key={exercise.$id}
-              name={exercise.name || 'Exercise'} // Handle possible empty name
-              image={exercise.thumbnail ? { uri: exercise.thumbnail } : dummyImage} // Provide a fallback image
+              name={exercise.name || 'Exercise'}
+              image={exercise.thumbnail ? { uri: exercise.thumbnail } : dummyImage}
               onAddToWorkout={() => handleAddToWorkout(exercise.$id)}
               onPress={() => router.push(`/exercise-description/${exercise.$id}`)}
             />
